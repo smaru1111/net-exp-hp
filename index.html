@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>石丸颯大の自己紹介</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fortuneButton = document.getElementById('drawFortuneButton');
+            const fortuneResult = document.getElementById('fortuneResult');
+            const fortunes = [
+                '大吉 - 素晴らしい一日です！',
+                '中吉 - 良いことがありそうです。',
+                '小吉 - 今日は普通の日です。',
+                '凶 - 注意が必要です。'
+            ];
+
+            fortuneButton.addEventListener('click', function() {
+                const randomIndex = Math.floor(Math.random() * fortunes.length);
+                fortuneResult.textContent = fortunes[randomIndex];
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -13,9 +30,16 @@
     <main>
         <section class="profile">
             <h2>プロフィール</h2>
-            <p><strong>名前：</strong>石丸颯大</p>
-            <p><strong>学籍番号：</strong>22238039</p>
-            <p><strong>所属：</strong>理工学部理工学科知能情報システム工学コース</p>
+            <div class="profile-content">
+                <div class="profile-text">
+                    <p><strong>名前：</strong>石丸颯大</p>
+                    <p><strong>学籍番号：</strong>22238039</p>
+                    <p><strong>所属：</strong>理工学部理工学科知能情報システム工学コース</p>
+                </div>
+                <div class="profile-image">
+                    <img src="profile.jpg" alt="Profile Image" width="80" height="80">
+                </div>
+            </div>
         </section>
         <section class="activities">
             <h2>部活</h2>
@@ -36,6 +60,11 @@
         <section class="github">
             <h2>Github</h2>
             <p><a href="https://github.com/smaru1111" target="_blank">https://github.com/smaru1111</a></p>
+        </section>
+        <section class="fortune">
+            <h2>今日の運勢</h2>
+            <button id="drawFortuneButton">くじを引く</button>
+            <p id="fortuneResult"></p>
         </section>
     </main>
     <footer>
