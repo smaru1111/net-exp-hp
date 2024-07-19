@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f0f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background: #e0e0e0;
+    border-radius: 30px;
+    box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+div {
+    margin-bottom: 10px;
+}
+
+input, select, button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+}
+
+.timetable {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.timetable div {
+    background: #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+}
