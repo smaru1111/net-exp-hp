@@ -7,56 +7,141 @@
 </head>
 <body>
     <div class="container">
-        <h1>学生情報管理</h1>
-        <form id="studentForm">
-            <input type="hidden" name="action" value="add">
-            <div>
-                <label for="student_number">学籍番号:</label>
-                <input type="text" id="student_number" name="student_number" required>
-            </div>
-            <div>
-                <label for="name">名前:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div>
-                <button type="submit">追加</button>
-            </div>
-        </form>
-
-        <h2>時間割管理</h2>
-        <form id="timetableForm">
-            <input type="hidden" name="action" value="add">
-            <div>
-                <label for="student_id">学生ID:</label>
-                <input type="number" id="student_id" name="student_id" required>
-            </div>
-            <div>
-                <label for="day">曜日:</label>
-                <input type="text" id="day" name="day" required>
-            </div>
-            <div>
-                <label for="period">時間帯:</label>
-                <input type="number" id="period" name="period" required>
-            </div>
-            <div>
-                <label for="subject">科目:</label>
-                <input type="text" id="subject" name="subject" required>
-            </div>
-            <div>
-                <button type="submit">追加</button>
-            </div>
-        </form>
-
-        <h1>時間割表示</h1>
-        <div class="selector">
-            <label for="studentSelect">学籍番号 (または名前):</label>
-            <select id="studentSelect" onchange="displayTimetable()">
-                <option value="">選択してください</option>
-                <!-- 動的にオプションを生成 -->
-            </select>
+        <div class="top-section">
+            <h1>学生情報管理</h1>
+            <form id="studentForm">
+                <input type="hidden" name="action" value="add">
+                <div>
+                    <label for="student_number">学籍番号:</label>
+                    <input type="text" id="student_number" name="student_number" required>
+                </div>
+                <div>
+                    <label for="name">名前:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <button type="submit">追加</button>
+                </div>
+            </form>
         </div>
-        <div class="timetable" id="timetable">
-            <!-- 時間割表がここに表示されます -->
+        <div class="bottom-section">
+            <h2>時間割管理</h2>
+            <div class="selector">
+                <label for="studentSelect">学籍番号 (または名前):</label>
+                <select id="studentSelect" onchange="displayTimetable()">
+                    <option value="">選択してください</option>
+                    <!-- 動的にオプションを生成 -->
+                </select>
+            </div>
+            <div class="timetable" id="timetable">
+                <!-- 時間割表がここに表示されます -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>時限</th>
+                            <th>月</th>
+                            <th>火</th>
+                            <th>水</th>
+                            <th>木</th>
+                            <th>金</th>
+                            <th>土</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>hoge</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 時間割編集画面 -->
+        <div class="edit-section">
+            <h2>授業編集</h2>
+            <form id="editForm">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" id="edit_student_id" name="student_id" required>
+                <div>
+                    <label for="edit_day">曜日:</label>
+                    <select id="edit_day" name="day" required>
+                        <option value="月">月</option>
+                        <option value="火">火</option>
+                        <option value="水">水</option>
+                        <option value="木">木</option>
+                        <option value="金">金</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit_period">時間帯:</label>
+                    <select id="edit_period" name="period" required>
+                        <option value="1">1限</option>
+                        <option value="2">2限</option>
+                        <option value="3">3限</option>
+                        <option value="4">4限</option>
+                        <option value="5">5限</option>
+                        <option value="6">6限</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit_subject">科目:</label>
+                    <input type="text" id="edit_subject" name="subject" required>
+                </div>
+                <div>
+                    <button type="submit">更新</button>
+                    <button type="button" onclick="deleteTimetable()">削除</button>
+                </div>
+            </form>
         </div>
     </div>
     <script src="script.js"></script>

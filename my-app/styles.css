@@ -9,11 +9,16 @@ body {
 }
 
 .container {
+    width: 90%;
     text-align: center;
     padding: 20px;
     background: #e0e0e0;
     border-radius: 30px;
     box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
+.top-section, .bottom-section, .edit-section {
+    margin-bottom: 20px;
 }
 
 h1, h2 {
@@ -37,14 +42,23 @@ input, select, button {
 }
 
 .timetable {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+    margin-top: 20px;
 }
 
-.timetable div {
+.timetable table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.timetable th, .timetable td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
     background: #e0e0e0;
     border-radius: 10px;
-    padding: 20px;
     box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+}
+
+.timetable td {
+    cursor: pointer;
 }

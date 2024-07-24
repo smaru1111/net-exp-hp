@@ -47,4 +47,3 @@ if ($action === 'add') {
 
 header('Location: index.html');
 ?>
-ああああ
