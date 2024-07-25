@@ -3,9 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <title>時間割管理システム</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            text-align: center;
+            padding: 20px;
+            background: #e0e0e0;
+            border-radius: 30px;
+            box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+        }
+
+        .top-section, .edit-section {
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
+        }
+
+        .edit-section {
+            width: 45%;
+        }
+
+        .timetable {
+            width: 60%;
+            margin-top: 0;
+        }
+
+        .timetable table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .timetable th, .timetable td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            background: #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+            width: 100px; 
+            white-space: pre-wrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+
+        .timetable td {
+            cursor: pointer;
+        }
+
+        .timetableContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         #editFormContainer {
+            width: 40%;
             display: none; /* 初期状態では非表示に */
         }
     </style>
@@ -29,8 +109,8 @@
                 </div>
             </form>
         </div>
+        <hr>
         <div class="bottom-section">
-            <h2>時間割管理</h2>
             <div class="selector">
                 <label for="studentSelect">学籍番号 (または名前):</label>
                 <select id="studentSelect" onchange="displayTimetable()">
@@ -38,46 +118,48 @@
                     <!-- 動的にオプションを生成 -->
                 </select>
             </div>
-            <div class="edit-section" id="editFormContainer">
-                <h2>授業編集</h2>
-                <form id="editForm">
-                    <input type="hidden" name="action" value="update">
-                    <input type="hidden" id="edit_id" name="id" required>
-                    <div>
-                        <label for="edit_day">曜日:</label>
-                        <select id="edit_day" name="day" required>
-                            <option value="月">月</option>
-                            <option value="火">火</option>
-                            <option value="水">水</option>
-                            <option value="木">木</option>
-                            <option value="金">金</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="edit_period">時間帯:</label>
-                        <select id="edit_period" name="period" required>
-                            <option value="1">1限</option>
-                            <option value="2">2限</option>
-                            <option value="3">3限</option>
-                            <option value="4">4限</option>
-                            <option value="5">5限</option>
-                            <option value="6">6限</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="edit_subject">科目:</label>
-                        <input type="text" id="edit_subject" name="subject" required>
-                    </div>
-                    <div>
-                        <button type="button" id="createButton" onclick="createTimetable()">作成</button>
-                        <button type="button" id="updateButton" onclick="updateTimetable()">更新</button>
-                        <button type="button" id="resetButton" onclick="resetTimetable()">リセット</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="timetable" id="timetable">
-            <!-- 時間割表がここに表示されます -->
+            <div class="timetableContainer">
+                <div class="edit-section" id="editFormContainer">
+                    <h2>授業編集</h2>
+                    <form id="editForm">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" id="edit_id" name="id" required>
+                        <div>
+                            <label for="edit_day">曜日:</label>
+                            <select id="edit_day" name="day" required>
+                                <option value="月">月</option>
+                                <option value="火">火</option>
+                                <option value="水">水</option>
+                                <option value="木">木</option>
+                                <option value="金">金</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit_period">時間帯:</label>
+                            <select id="edit_period" name="period" required>
+                                <option value="1">1限</option>
+                                <option value="2">2限</option>
+                                <option value="3">3限</option>
+                                <option value="4">4限</option>
+                                <option value="5">5限</option>
+                                <option value="6">6限</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit_subject">科目:</label>
+                            <input type="text" id="edit_subject" name="subject" required>
+                        </div>
+                        <div>
+                            <button type="button" id="createButton" onclick="createTimetable()">作成</button>
+                            <button type="button" id="updateButton" onclick="updateTimetable()">更新</button>
+                            <button type="button" id="resetButton" onclick="resetTimetable()">リセット</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="timetable" id="timetable">
+                    <!-- 時間割表がここに表示されます -->
+                </div>
+            </div>  
         </div>
     </div>
 
@@ -156,6 +238,9 @@
                         const days = ['月', '火', '水', '木', '金'];
                         const periods = [1, 2, 3, 4, 5, 6];
 
+                        const p = document.createElement('p');
+                        p.textContent = '編集したい時間割をタップすると、左側で編集できます。';
+                        
                         const table = document.createElement('table');
                         const thead = document.createElement('thead');
                         const tbody = document.createElement('tbody');
@@ -192,6 +277,7 @@
                         });
 
                         table.appendChild(tbody);
+                        timetableDiv.appendChild(p);
                         timetableDiv.appendChild(table);
 
                         // フォームを表示
@@ -214,12 +300,14 @@
         const subject = document.getElementById('edit_subject').value;
 
         fetch('manage_timetable.php', {
+            
             method: 'POST',
             body: new URLSearchParams({ action: 'create', student_id: studentId, day: day, period: period, subject: subject })
         })
         .then(response => response.text())
         .then(data => {
             displayTimetable(); 
+            toggleButtons(); 
         })
         .catch(error => console.error('Error:', data));
     }
@@ -246,6 +334,7 @@
         .then(response => response.text())
         .then(data => {
                 displayTimetable(); 
+                toggleButtons();
         })
         .catch(error => console.error('Error:', error));
     }
@@ -260,6 +349,8 @@
         .then(response => response.text())
         .then(data => {
             displayTimetable(); 
+            toggleButtons();
+            document.getElementById('edit_subject').value = '';
         })
         .catch(error => console.error('Error:', error));
     }
