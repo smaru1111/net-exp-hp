@@ -37,7 +37,6 @@
                 <h2>授業編集</h2>
                 <form id="editForm">
                     <input type="hidden" name="action" value="update">
-                    <input type="hidden" id="edit_student_id" name="student_id" required>
                     <input type="hidden" id="edit_id" name="id" required>
                     <div>
                         <label for="edit_day">曜日:</label>
@@ -62,7 +61,7 @@
                     </div>
                     <div>
                         <label for="edit_subject">科目:</label>
-                        <input type="text" id="edit_subject" name="subject" required oninput="toggleButtons()">
+                        <input type="text" id="edit_subject" name="subject" required>
                     </div>
                     <div>
                         <button type="button" id="createButton" onclick="createTimetable()">作成</button>
@@ -93,12 +92,7 @@
         .then(response => response.text())
         .then(data => {
             try {
-                const jsonData = JSON.parse(data);
-                if (jsonData.error) {
-                    console.log('Error:', jsonData.error);
-                } else {
-                    fetchStudents();
-                }
+                fetchStudents();
             } catch (e) {
                 console.log('Full Error Message:', data);
             }
@@ -119,7 +113,7 @@
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.student_number;
-                option.textContent = `${student.student_number} - ${student.name}`;
+                option.textContent = ${student.student_number} - ${student.name};
                 select.appendChild(option);
             });
         })
@@ -174,7 +168,7 @@
                         periods.forEach(period => {
                             const row = document.createElement('tr');
                             const periodCell = document.createElement('td');
-                            periodCell.textContent = `${period}限`;
+                            periodCell.textContent = ${period}限;
                             row.appendChild(periodCell);
 
                             days.forEach(day => {
@@ -184,7 +178,7 @@
                                     cell.textContent = entry.subject;
                                 }
                                 cell.addEventListener('click', function() {
-                                    openEditSection(student.id, day, period, entry ? entry.subject : '');
+                                    openEditSection(day, period, entry ? entry.subject : '', entry ? entry.id : "");
                                 });
                                 row.appendChild(cell);
                             });
@@ -212,19 +206,15 @@
             method: 'POST',
             body: new URLSearchParams({ action: 'create', student_id: studentId, day: day, period: period, subject: subject })
         })
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                displayTimetable();
-            }
+            displayTimetable(); 
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error:', data));
     }
 
-    function openEditSection(studentId, day, period, subject) {
-        document.getElementById('edit_student_id').value = studentId;
+    function openEditSection(day, period, subject, id) {
+        document.getElementById('edit_id').value = id;
         document.getElementById('edit_day').value = day;
         document.getElementById('edit_period').value = period;
         document.getElementById('edit_subject').value = subject;
@@ -232,43 +222,33 @@
     }
     
     function updateTimetable(){
-        const studentId = document.getElementById('edit_student_id').value;
         const day = document.getElementById('edit_day').value;
         const period = document.getElementById('edit_period').value;
         const subject = document.getElementById('edit_subject').value;
         const id = document.getElementById('edit_id').value;
+        console.log( day, period, subject, id);
 
         fetch('manage_timetable.php', {
             method: 'POST',
-            body: new URLSearchParams({ action: 'update', student_id: studentId, day: day, period: period, subject: subject, id: id })
+            body: new URLSearchParams({ action: 'update', day: day, period: period, subject: subject, id: id })
         })
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                displayTimetable();
-            }
+                displayTimetable(); 
         })
         .catch(error => console.error('Error:', error));
     }
 
     function resetTimetable() {
-        const studentId = document.getElementById('edit_student_id').value;
-        const day = document.getElementById('edit_day').value;
-        const period = document.getElementById('edit_period').value;
+        const id = document.getElementById('edit_id').value;
 
         fetch('manage_timetable.php', {
             method: 'POST',
-            body: new URLSearchParams({ action: 'update', student_id: studentId, day: day, period: period, subject: '' })
+            body: new URLSearchParams({ action: 'delete', id: id })
         })
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                displayTimetable();
-            }
+            displayTimetable(); 
         })
         .catch(error => console.error('Error:', error));
     }

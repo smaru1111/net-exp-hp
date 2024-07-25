@@ -8,6 +8,7 @@ $db = getDbConnection();
 $action = $_POST['action'];
 
 if ($action === 'create' || $action === 'update') {
+    $id = $_POST['id'];
     $student_id = $_POST['student_id'];
     $day = $_POST['day'];
     $period = $_POST['period'];
@@ -26,7 +27,6 @@ try {
         }
         echo json_encode(['status' => 'success']);
     } elseif ($action === 'update') {
-        $id = $_POST['id'];
         $stmt = $db->prepare('UPDATE timetable SET day = ?, period = ?, subject = ? WHERE id = ?');
         $stmt->bindValue(1, $day, SQLITE3_TEXT);
         $stmt->bindValue(2, $period, SQLITE3_INTEGER);
