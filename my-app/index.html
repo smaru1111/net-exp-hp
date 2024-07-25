@@ -62,12 +62,12 @@
                     </div>
                     <div>
                         <label for="edit_subject">科目:</label>
-                        <input type="text" id="edit_subject" name="subject" required>
+                        <input type="text" id="edit_subject" name="subject" required oninput="toggleButtons()">
                     </div>
                     <div>
-                        <button type="button" onclick="createTimetable()">作成</button>
-                        <button type="submit" onclick="updateTimetable()">更新</button>
-                        <button type="button" onclick="resetTimetable()">リセット</button>
+                        <button type="button" id="createButton" onclick="createTimetable()">作成</button>
+                        <button type="button" id="updateButton" onclick="updateTimetable()">更新</button>
+                        <button type="button" id="resetButton" onclick="resetTimetable()">リセット</button>
                     </div>
                 </form>
             </div>
@@ -81,31 +81,30 @@
     document.addEventListener('DOMContentLoaded', function() {
         fetchStudents();
     });
-    
-function createStudents() {
-    const student_number = document.getElementById('student_number').value;
-    const name = document.getElementById('name').value;
-    console.log(student_number);
-    fetch('manage_students.php', {
-        method: 'POST',
-        body: new URLSearchParams({ action: 'add', student_number: student_number, name: name })
-    })
-    .then(response => response.text()) 
-    .then(data => {
-        try {
-            const jsonData = JSON.parse(data); 
-            if (jsonData.error) {
-                console.log('Error:', jsonData.error);
-            } else {
-                fetchStudents();
-            }
-        } catch (e) {
-            console.log('Full Error Message:', data);
-        }
-    })
-    .catch(error => console.error('Fetch Error:', error));
-}
 
+    function createStudents() {
+        const student_number = document.getElementById('student_number').value;
+        const name = document.getElementById('name').value;
+        console.log(student_number);
+        fetch('manage_students.php', {
+            method: 'POST',
+            body: new URLSearchParams({ action: 'add', student_number: student_number, name: name })
+        })
+        .then(response => response.text())
+        .then(data => {
+            try {
+                const jsonData = JSON.parse(data);
+                if (jsonData.error) {
+                    console.log('Error:', jsonData.error);
+                } else {
+                    fetchStudents();
+                }
+            } catch (e) {
+                console.log('Full Error Message:', data);
+            }
+        })
+        .catch(error => console.error('Fetch Error:', error));
+    }
 
     function fetchStudents() {
         fetch('manage_students.php', {
@@ -148,11 +147,10 @@ function createStudents() {
                         body: new URLSearchParams({ action: 'fetch', student_id: student.student_number })
                     })
                     .then(async response => {
-                        const hoge = await response.json()
+                        const hoge = await response.json();
                         await console.log(hoge);
                         return hoge;
-                    }
-                    )
+                    })
                     .then(timetable => {
                         console.log(timetable);
                         // テーブルの構造を生成
@@ -230,6 +228,7 @@ function createStudents() {
         document.getElementById('edit_day').value = day;
         document.getElementById('edit_period').value = period;
         document.getElementById('edit_subject').value = subject;
+        toggleButtons(); // ボタンの状態を更新
     }
     
     function updateTimetable(){
@@ -272,6 +271,23 @@ function createStudents() {
             }
         })
         .catch(error => console.error('Error:', error));
+    }
+
+    function toggleButtons() {
+        const subject = document.getElementById('edit_subject').value;
+        const createButton = document.getElementById('createButton');
+        const updateButton = document.getElementById('updateButton');
+        const resetButton = document.getElementById('resetButton');
+
+        if (subject === '') {
+            createButton.disabled = false;
+            updateButton.disabled = true;
+            resetButton.disabled = true;
+        } else {
+            createButton.disabled = true;
+            updateButton.disabled = false;
+            resetButton.disabled = false;
+        }
     }
 </script>
 </body>
