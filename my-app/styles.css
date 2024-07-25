@@ -17,7 +17,7 @@ body {
     box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
 }
 
-.top-section, .bottom-section, .edit-section {
+.top-section, .edit-section {
     margin-bottom: 20px;
 }
 
@@ -41,8 +41,20 @@ input, select, button {
     box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff;
 }
 
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.edit-section {
+    width: 45%;
+}
+
 .timetable {
-    margin-top: 20px;
+    width: 50%;
+    margin-top: 0;
 }
 
 .timetable table {

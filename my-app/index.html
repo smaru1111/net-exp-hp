@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>時間割管理システム</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #editFormContainer {
+            display: none; /* 初期状態では非表示に */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -33,7 +38,7 @@
                     <!-- 動的にオプションを生成 -->
                 </select>
             </div>
-            <div class="edit-section">
+            <div class="edit-section" id="editFormContainer">
                 <h2>授業編集</h2>
                 <form id="editForm">
                     <input type="hidden" name="action" value="update">
@@ -113,7 +118,7 @@
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.student_number;
-                option.textContent = ${student.student_number} - ${student.name};
+                option.textContent = `${student.student_number} - ${student.name}`;
                 select.appendChild(option);
             });
         })
@@ -168,7 +173,7 @@
                         periods.forEach(period => {
                             const row = document.createElement('tr');
                             const periodCell = document.createElement('td');
-                            periodCell.textContent = ${period}限;
+                            periodCell.textContent = `${period}限`;
                             row.appendChild(periodCell);
 
                             days.forEach(day => {
@@ -188,11 +193,17 @@
 
                         table.appendChild(tbody);
                         timetableDiv.appendChild(table);
+
+                        // フォームを表示
+                        document.getElementById('editFormContainer').style.display = 'block';
                     })
                     .catch(error => console.error('Error:', error));
                 }
             })
             .catch(error => console.error('Error:', error));
+        } else {
+            // 学籍番号が選択されていない場合、フォームを非表示にする
+            document.getElementById('editFormContainer').style.display = 'none';
         }
     }
 
