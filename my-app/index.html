@@ -20,7 +20,7 @@
                     <input type="text" id="name" name="name" required>
                 </div>
                 <div>
-                    <button type="submit">追加</button>
+                    <button type="button" onclick="createStudents()">追加</button>
                 </div>
             </form>
         </div>
@@ -33,117 +33,246 @@
                     <!-- 動的にオプションを生成 -->
                 </select>
             </div>
-            <div class="timetable" id="timetable">
-                <!-- 時間割表がここに表示されます -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>時限</th>
-                            <th>月</th>
-                            <th>火</th>
-                            <th>水</th>
-                            <th>木</th>
-                            <th>金</th>
-                            <th>土</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>hoge</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="edit-section">
+                <h2>授業編集</h2>
+                <form id="editForm">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" id="edit_student_id" name="student_id" required>
+                    <input type="hidden" id="edit_id" name="id" required>
+                    <div>
+                        <label for="edit_day">曜日:</label>
+                        <select id="edit_day" name="day" required>
+                            <option value="月">月</option>
+                            <option value="火">火</option>
+                            <option value="水">水</option>
+                            <option value="木">木</option>
+                            <option value="金">金</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit_period">時間帯:</label>
+                        <select id="edit_period" name="period" required>
+                            <option value="1">1限</option>
+                            <option value="2">2限</option>
+                            <option value="3">3限</option>
+                            <option value="4">4限</option>
+                            <option value="5">5限</option>
+                            <option value="6">6限</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit_subject">科目:</label>
+                        <input type="text" id="edit_subject" name="subject" required>
+                    </div>
+                    <div>
+                        <button type="button" onclick="createTimetable()">作成</button>
+                        <button type="submit" onclick="updateTimetable()">更新</button>
+                        <button type="button" onclick="resetTimetable()">リセット</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <!-- 時間割編集画面 -->
-        <div class="edit-section">
-            <h2>授業編集</h2>
-            <form id="editForm">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" id="edit_student_id" name="student_id" required>
-                <div>
-                    <label for="edit_day">曜日:</label>
-                    <select id="edit_day" name="day" required>
-                        <option value="月">月</option>
-                        <option value="火">火</option>
-                        <option value="水">水</option>
-                        <option value="木">木</option>
-                        <option value="金">金</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="edit_period">時間帯:</label>
-                    <select id="edit_period" name="period" required>
-                        <option value="1">1限</option>
-                        <option value="2">2限</option>
-                        <option value="3">3限</option>
-                        <option value="4">4限</option>
-                        <option value="5">5限</option>
-                        <option value="6">6限</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="edit_subject">科目:</label>
-                    <input type="text" id="edit_subject" name="subject" required>
-                </div>
-                <div>
-                    <button type="submit">更新</button>
-                    <button type="button" onclick="deleteTimetable()">削除</button>
-                </div>
-            </form>
+        <div class="timetable" id="timetable">
+            <!-- 時間割表がここに表示されます -->
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchStudents();
+    });
+    
+function createStudents() {
+    const student_number = document.getElementById('student_number').value;
+    const name = document.getElementById('name').value;
+    console.log(student_number);
+    fetch('manage_students.php', {
+        method: 'POST',
+        body: new URLSearchParams({ action: 'add', student_number: student_number, name: name })
+    })
+    .then(response => response.text()) 
+    .then(data => {
+        try {
+            const jsonData = JSON.parse(data); 
+            if (jsonData.error) {
+                console.log('Error:', jsonData.error);
+            } else {
+                fetchStudents();
+            }
+        } catch (e) {
+            console.log('Full Error Message:', data);
+        }
+    })
+    .catch(error => console.error('Fetch Error:', error));
+}
+
+
+    function fetchStudents() {
+        fetch('manage_students.php', {
+            method: 'POST',
+            body: new URLSearchParams({action: 'fetch' })
+        })
+        .then(async response => await response.json())
+        .then(students => {
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '<option value="">選択してください</option>';
+            console.log("hoge",students);
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.student_number;
+                option.textContent = `${student.student_number} - ${student.name}`;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function displayTimetable() {
+        const select = document.getElementById('studentSelect');
+        const student_number = select.value;
+        const timetableDiv = document.getElementById('timetable');
+
+        timetableDiv.innerHTML = ''; // 既存の内容をクリア
+
+        if (student_number) {
+            fetch('manage_students.php', {
+                method: 'POST',
+                body: new URLSearchParams({ action: 'fetch' })
+            })
+            .then(response => response.json())
+            .then(students => {
+                const student = students.find(s => s.student_number === student_number);
+                if (student) {
+                    fetch('manage_timetable.php', {
+                        method: 'POST',
+                        body: new URLSearchParams({ action: 'fetch', student_id: student.student_number })
+                    })
+                    .then(async response => {
+                        const hoge = await response.json()
+                        await console.log(hoge);
+                        return hoge;
+                    }
+                    )
+                    .then(timetable => {
+                        console.log(timetable);
+                        // テーブルの構造を生成
+                        const days = ['月', '火', '水', '木', '金'];
+                        const periods = [1, 2, 3, 4, 5, 6];
+
+                        const table = document.createElement('table');
+                        const thead = document.createElement('thead');
+                        const tbody = document.createElement('tbody');
+
+                        const headerRow = document.createElement('tr');
+                        headerRow.appendChild(document.createElement('th')); // 空のヘッダ
+                        days.forEach(day => {
+                            const th = document.createElement('th');
+                            th.textContent = day;
+                            headerRow.appendChild(th);
+                        });
+                        thead.appendChild(headerRow);
+                        table.appendChild(thead);
+
+                        periods.forEach(period => {
+                            const row = document.createElement('tr');
+                            const periodCell = document.createElement('td');
+                            periodCell.textContent = `${period}限`;
+                            row.appendChild(periodCell);
+
+                            days.forEach(day => {
+                                const cell = document.createElement('td');
+                                const entry = timetable.find(e => e.day === day && e.period === period);
+                                if (entry) {
+                                    cell.textContent = entry.subject;
+                                }
+                                cell.addEventListener('click', function() {
+                                    openEditSection(student.id, day, period, entry ? entry.subject : '');
+                                });
+                                row.appendChild(cell);
+                            });
+
+                            tbody.appendChild(row);
+                        });
+
+                        table.appendChild(tbody);
+                        timetableDiv.appendChild(table);
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+
+    function createTimetable() {
+        const studentId = document.getElementById('studentSelect').value;
+        const day = document.getElementById('edit_day').value;
+        const period = document.getElementById('edit_period').value;
+        const subject = document.getElementById('edit_subject').value;
+
+        fetch('manage_timetable.php', {
+            method: 'POST',
+            body: new URLSearchParams({ action: 'create', student_id: studentId, day: day, period: period, subject: subject })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                displayTimetable();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function openEditSection(studentId, day, period, subject) {
+        document.getElementById('edit_student_id').value = studentId;
+        document.getElementById('edit_day').value = day;
+        document.getElementById('edit_period').value = period;
+        document.getElementById('edit_subject').value = subject;
+    }
+    
+    function updateTimetable(){
+        const studentId = document.getElementById('edit_student_id').value;
+        const day = document.getElementById('edit_day').value;
+        const period = document.getElementById('edit_period').value;
+        const subject = document.getElementById('edit_subject').value;
+        const id = document.getElementById('edit_id').value;
+
+        fetch('manage_timetable.php', {
+            method: 'POST',
+            body: new URLSearchParams({ action: 'update', student_id: studentId, day: day, period: period, subject: subject, id: id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                displayTimetable();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function resetTimetable() {
+        const studentId = document.getElementById('edit_student_id').value;
+        const day = document.getElementById('edit_day').value;
+        const period = document.getElementById('edit_period').value;
+
+        fetch('manage_timetable.php', {
+            method: 'POST',
+            body: new URLSearchParams({ action: 'update', student_id: studentId, day: day, period: period, subject: '' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                displayTimetable();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>
